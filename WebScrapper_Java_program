@@ -1,0 +1,38 @@
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class ProductScraper {
+    public static void main(String[] args) {
+        try {
+            // Connect to the website
+            Document doc = Jsoup.connect("https://example.com").get();
+            
+            // Select product elements
+            Elements products = doc.select(".product"); // Adjust the CSS selector according to the structure of the website
+            
+            // Open CSV file for writing
+            FileWriter csvWriter = new FileWriter("products.csv");
+            csvWriter.append("Name,Price,Rating\n");
+
+            // Extract product information and write to CSV
+            for (Element product : products) {
+                String name = product.select(".product-name").text(); // Adjust the class name according to the structure of the website
+                String price = product.select(".product-price").text(); // Adjust the class name according to the structure of the website
+                String rating = product.select(".product-rating").text(); // Adjust the class name according to the structure of the website
+                csvWriter.append(name).append(",").append(price).append(",").append(rating).append("\n");
+            }
+
+            // Close CSV writer
+            csvWriter.flush();
+            csvWriter.close();
+
+            System.out.println("Scraping completed. Data saved to products.csv");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
